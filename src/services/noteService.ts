@@ -32,6 +32,7 @@ export type CreateNoteTodo = {
 export const fetchNotes = async (search: string, page: number): Promise<FetchNotesResponse> => {
   const params: FetchNotesParams = {
     page,
+    perPage: 12,
     search: search || undefined
   };
   const response: AxiosResponse<FetchNotesResponse> = await axiosInstance.get('', { params });
