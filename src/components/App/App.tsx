@@ -14,7 +14,7 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
-  const [debouncedSearch] = useDebounce(search, 400);
+  const [debouncedSearch] = useDebounce(search, 300);
 
   const handleSearchChange = (newSearch: string) => {
     setSearch(newSearch);
@@ -26,8 +26,6 @@ export default function App() {
     queryFn: () => fetchNotes(debouncedSearch, page),
     placeholderData: keepPreviousData,
   });
-
-  console.log("Query Data in App:", data); // Логування для дебагу
 
   return (
     <div className={css.app}>

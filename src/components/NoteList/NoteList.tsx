@@ -7,7 +7,7 @@ export interface NoteListProps {
   notes: Note[];
 }
 
-function NoteList({ notes }: NoteListProps) {
+export default function NoteList({ notes }: NoteListProps) {
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
@@ -16,12 +16,11 @@ function NoteList({ notes }: NoteListProps) {
       queryClient.invalidateQueries({ queryKey: ["notes"] });
     },
     onError: (error) => {
-      console.error("Помилка при видаленні нотатки:", error);
+      console.error("Error when deleting a note:", error);
     },
   });
 
-  console.log("Notes in NoteList:", notes); // Логування для дебагу
-
+  
   if (!notes.length) return null;
 
   return (
@@ -34,7 +33,7 @@ function NoteList({ notes }: NoteListProps) {
             <span className={css.tag}>{note.tag}</span>
             <button
               className={css.button}
-              onClick={() => deleteMutation.mutate(Number(note.id))} // Примусове приведення до числа
+              onClick={() => deleteMutation.mutate(Number(note.id))} 
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
@@ -46,4 +45,6 @@ function NoteList({ notes }: NoteListProps) {
   );
 }
 
-export default NoteList;
+///////////////////////
+
+
