@@ -1,23 +1,49 @@
 import css from "./NoteList.module.css";
 import { type Note } from "../../types/note";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteNote } from "../../services/noteService";
 
-interface NoteListProps {
+export interface NoteListProps {
   notes: Note[];
 }
 
-export default function NoteList({ notes }: NoteListProps) {
+function NoteList({ notes }: NoteListProps) {
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteNote(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] });
+    },
+    onError: (error) => {
+      console.error("Помилка при видаленні нотатки:", error);
+    },
+  });
+
+  console.log("Notes in NoteList:", notes); // Логування для дебагу
+
+  if (!notes.length) return null;
+
   return (
     <ul className={css.list}>
-      {/* Набір елементів списку нотатків */}
       {notes.map((note) => (
-        <li key={note.id} className={css.listItem}>
-        <h2 className={css.title}>Note title</h2>
-        <p className={css.content}>Note content</p>
-        <div className={css.footer}>
-          <span className={css.tag}>Note tag</span>
-          <button className={css.button}>Delete</button>
-        </div>
-      </li>))}
+        <li className={css.listItem} key={note.id}>
+          <h2 className={css.title}>{note.title}</h2>
+          <p className={css.content}>{note.content}</p>
+          <div className={css.footer}>
+            <span className={css.tag}>{note.tag}</span>
+            <button
+              className={css.button}
+              onClick={() => deleteMutation.mutate(Number(note.id))} // Примусове приведення до числа
+              disabled={deleteMutation.isPending}
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete"}
+            </button>
+          </div>
+        </li>
+      ))}
     </ul>
   );
 }
+
+export default NoteList;
