@@ -33,7 +33,8 @@ export default function NoteList({ notes }: NoteListProps) {
             <span className={css.tag}>{note.tag}</span>
             <button
               className={css.button}
-              onClick={() => deleteMutation.mutate(Number(note.id))} 
+              onClick={() => deleteMutation.mutate(note.id)} 
+              
               disabled={deleteMutation.isPending}
             >
               {deleteMutation.isPending ? "Deleting..." : "Delete"}
@@ -45,6 +46,8 @@ export default function NoteList({ notes }: NoteListProps) {
   );
 }
 
-///////////////////////
+
+
+
 
 
